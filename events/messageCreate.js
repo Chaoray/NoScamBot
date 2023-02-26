@@ -36,20 +36,21 @@ module.exports = {
                     }
                 }
             }
-        } else {
-            let urls = message.content.match(UrlRegex);
-            urls = urls ? urls : [];
-            for (let url of urls) {
-                url = new URL(url);
-                if (db.isGambling(url)) {
-                    message.reply('**內含博弈網站!**');
-                    break;
-                }
+            return;
+        }
 
-                if (api.isPhishUrl(url.href)) {
-                    message.reply('**內含釣魚網站!**');
-                    break;
-                }
+        let urls = message.content.match(UrlRegex);
+        urls = urls ? urls : [];
+        for (let url of urls) {
+            url = new URL(url);
+            if (db.isGambling(url)) {
+                message.reply('**內含博弈網站!**');
+                break;
+            }
+
+            if (api.isPhishUrl(url.href)) {
+                message.reply('**內含釣魚網站!**');
+                break;
             }
         }
     },

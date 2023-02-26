@@ -168,7 +168,9 @@ class NewsDatabase extends Database {
 // TODO: 類別相似度過高
 // [建議] 高度相似部分可以轉成同一類別
 
-// TODO: 定期更新資料庫
+// TODO: 自動更新資料庫?
+// 1. 清空
+// 2. 重新抓資料
 
 module.exports = {
     GamblingWebsiteDatabase: GamblingWebsiteDatabase,
