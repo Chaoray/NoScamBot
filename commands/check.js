@@ -1,14 +1,10 @@
-const { GamblingWebsiteDatabase, } = require('../handler/database');
-const { PhishingUrlAPI, } = require('../handler/api');
+const { CheckIsPhishingAPI, } = require('../handler/phishing_api');
 
-const db = new GamblingWebsiteDatabase();
-db.init();
-
-const api = new PhishingUrlAPI();
+const api = new CheckIsPhishingAPI();
 
 module.exports = {
-    name: 'test',
-    description: '查看網址是否有問題\nUsage: test [url]',
+    name: 'check',
+    description: '查看網址是否有問題\nUsage: check [url]',
     async execute(message, params) {
         params = params.split(' ');
 
@@ -19,17 +15,13 @@ module.exports = {
 
         let url = params[0];
         url = isValidUrl(url);
-        if (url) {
-            if (await db.isGambling(url.href)) {
-                message.reply('**是博弈網站!**');
-                return;
-            }
-        } else {
+        if (!url) {
             message.reply('網址錯誤');
             return;
         }
 
-        if (!api.isPhishUrl(url.href)) {
+        const res = await api.isPhishUrl(url);
+        if (res) {
             message.reply('**是釣魚網站!**');
             return;
         }

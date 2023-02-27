@@ -2,6 +2,9 @@ require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 
+const { CheckIsPhishingAPI, } = require('./handler/phishing_api');
+const checkIsPhishingAPI = new CheckIsPhishingAPI();
+
 const { Client, GatewayIntentBits, Partials, Collection, } = require('discord.js');
 const client = new Client({
     intents: [
@@ -71,4 +74,6 @@ for (const file of interactionFiles) {
     }
 }
 
-client.login(process.env.TOKEN);
+checkIsPhishingAPI.init().then(() => {
+    client.login(process.env.TOKEN);
+});

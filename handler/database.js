@@ -1,6 +1,6 @@
 const Datastore = require('nedb');
 const path = require('path');
-const { ScamDataAPI, } = require('./api');
+const { ScamDataAPI, } = require('./npa_api');
 
 /**
  * Database類別原型
@@ -74,6 +74,8 @@ class GamblingWebsiteDatabase extends Database {
      * @return {boolean} isGambling?
      */
     async isGambling(url) {
+        if (!(url instanceof URL)) return null;
+
         const doc = await this.find({ WEBURL: url.hostname, });
         if (doc.length > 0) {
             return true;
@@ -122,48 +124,6 @@ class NewsDatabase extends Database {
         });
     }
 }
-
-// 用不到
-// /**
-//  * 詐騙Line ID資料庫封裝類別
-//  */
-// class LineIdDatabase extends Database {
-//     /**
-//      * 初始化類別
-//      */
-//     constructor() {
-//         super();
-
-//         this._db = new Datastore({
-//             filename: path.join(__dirname, '../db/lineid.db'),
-//             autoload: true,
-//         });
-//     }
-
-//     /**
-//      * 初始化資料庫
-//      * @return {Promise<Object>} 資料庫初始化後的資料
-//      */
-//     init() {
-//         const api = new ScamDataAPI();
-//         return new Promise((resolve, reject) => {
-//             this._db.find({}, async (err, docs) => {
-//                 if (err) return reject(err);
-
-//                 if (docs.length == 0) {
-//                     let data = await api.getLineId();
-//                     data = api.parse(data);
-//                     this._db.insert(data, (err, docs) => {
-//                         resolve(docs);
-//                     });
-//                 } else {
-//                     resolve(docs);
-//                 }
-//             });
-//         });
-//     }
-// }
-
 
 // TODO: 類別相似度過高
 // [建議] 高度相似部分可以轉成同一類別

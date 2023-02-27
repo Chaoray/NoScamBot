@@ -14,7 +14,7 @@ module.exports = {
         }
 
         if (params[0] === '') {
-            await message.reply(`Usage: ${process.env.PREFIX}help [command]`);
+            await message.reply(`Usage: ${process.env.PREFIX}help [command]\n可用的指令:\nhelp\nping\ncheck\nnews`);
         }
     },
 };

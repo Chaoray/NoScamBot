@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
@@ -13,8 +13,10 @@
   "dependencies": {
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
+    "flexsearch": "^0.7.31",
     "nedb": "^1.8.0",
-    "node-fetch-commonjs": "^3.2.4"
+    "node-fetch-commonjs": "^3.2.4",
+    "tar-stream": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^8.33.0",

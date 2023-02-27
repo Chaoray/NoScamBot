@@ -1,11 +1,9 @@
 const { Events, } = require('discord.js');
-const { GamblingWebsiteDatabase, } = require('../handler/database');
-const { PhishingUrlAPI, } = require('../handler/api');
+
+const { CheckIsPhishingAPI, } = require('../handler/phishing_api');
+const api = new CheckIsPhishingAPI();
 
 const commandPrefix = process.env.PREFIX;
-
-const db = new GamblingWebsiteDatabase();
-const api = new PhishingUrlAPI();
 
 const UrlRegex = /((http|ftp|https):\/\/)?([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/g;
 
@@ -21,37 +19,35 @@ module.exports = {
             const commandList = message.client.messageCommands;
 
             const command = commandList.get(commandName);
-            if (command) {
-                if (command.execute) {
-                    let commandParams = '';
-                    if (firstSpace > 0) {
-                        commandParams = content.slice(firstSpace, content.length).trim();
-                    }
+            if (!command) return;
 
-                    try {
-                        await command.execute(message, commandParams);
-                    } catch (err) {
-                        console.error(err);
-                        message.reply('Error');
-                    }
-                }
+            if (!command.execute) return;
+
+            let commandParams = '';
+            if (firstSpace > 0) {
+                commandParams = content.slice(firstSpace, content.length).trim();
             }
-            return;
+
+            try {
+                await command.execute(message, commandParams);
+            } catch (err) {
+                console.error(err);
+                message.reply('Error');
+            }
         }
 
         let urls = message.content.match(UrlRegex);
         urls = urls ? urls : [];
-        for (let url of urls) {
-            url = new URL(url);
-            if (db.isGambling(url)) {
-                message.reply('**內含博弈網站!**');
-                break;
-            }
+        for (const url of urls) {
+            const target = new URL(url);
 
-            if (api.isPhishUrl(url.href)) {
+            if (await api.isPhishUrl(target)) {
                 message.reply('**內含釣魚網站!**');
                 break;
             }
         }
     },
 };
+
+// TODO: 做個參數產生器吧....
+// 管理還要轉換甚麼的太麻煩了

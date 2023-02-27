@@ -1,19 +1,13 @@
 const { GamblingWebsiteDatabase, NewsDatabase, } = require('../handler/database');
 
 xdescribe('資料庫測試', () => {
-    xtest('取得最新新聞', () => {
-        const db = new NewsDatabase();
-        db._db.count({}, async (err, count) => {
-            expect(count).toBe(85);
+    xtest('gambling database test', () => {
+        const db = new GamblingWebsiteDatabase();
+        db.init();
+        const target = new URL('https://www.google.com/');
 
-            let news = await db.find({ 編號: `${count}`, });
-
-            expect(news.length).toBeGreaterThan(0);
-
-            if (news.length > 0) {
-                news = news[0];
-                console.log(`**${news['標題']}**  ${news['發佈時間']}\n\n${news['發佈內容']}`);
-            }
-        });
+        expect(db.isGambling(target)).toBe(false); // wtf???
+        // Expected: false
+        // Received: {Symbol(async_id_symbol): 1094, Symbol(trigger_async_id_symbol): 791}
     });
 });
